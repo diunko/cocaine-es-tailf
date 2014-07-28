@@ -1,6 +1,6 @@
 {
   "name": "cocaine-es-tailf",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "tail logs from ES logging backend",
   "main": "sample.js",
   "scripts": {
