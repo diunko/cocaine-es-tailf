@@ -6,6 +6,13 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "",
-  "license": "BSD"
+  "bin": {
+    "es-tailf": "./sample.js"
+  },
+  "author": "Dmitry Unkovsky <oil.crayons@gmail.com>",
+  "license": "BSD",
+  "dependencies": {
+    "debug": "^1.0.4",
+    "optimist": "^0.6.1"
+  }
 }

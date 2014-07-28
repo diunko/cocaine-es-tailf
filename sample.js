@@ -1,19 +1,32 @@
 
-var argv = require('optimist').argv
-
 var http = require('http')
 var util = require('util')
 var __assert = require('assert')
 
+var debug = require('debug')('es-tailf')
+
 var pad0 = require('./util').pad0
 
-var HOST = argv['source-host'] || 'cocs01h.tst.ape.yandex.net'
+var argv = require('optimist')
+  .usage()
+  .default({
+    'es-port': 9200,
+    'source-host': '*',
+    'f': ['@timestamp', '@source_host', '@source_path', '@message']
+  })
+  .describe('f', 'fields to display (see http://kibana.tst.ape.yandex.net for more info)')
+  .describe('source-path', '@source_path query')
+  .describe('source-host', '@source_host query')
+  .demand(['source-path', 'es-host'])
+  .argv
+
+var HOST = argv['source-host']
 var SOURCE_PATH = argv['source-path']
-var FIELDS = argv.f || ['@message']
+var FIELDS = argv.f
 var INTERVAL = 60
 
-var ES_HOST = argv['es-host'] || 'elastic01d.tst.ape.yandex.net'
-var ES_PORT = argv['es-port'] || 9200
+var ES_HOST = argv['es-host']
+var ES_PORT = argv['es-port']
 
 var d = new Date()
 var ES_INDEX = util.format('logstash-%d.%s.%s', d.getFullYear(), pad0(d.getMonth()+1, 2),  pad0(d.getDate(), 2))
@@ -44,7 +57,7 @@ function getQuery(needle, options){
 function doQuery(){
 
   var fields = FIELDS
-  //var query = getQuery('*diunko-test*', {fields:['@message', '@source_host']})
+
   var query = getQuery(SOURCE_PATH,
                     {fields:fields,
                      host:HOST})
@@ -62,10 +75,10 @@ function doQuery(){
     }
   }
 
-  //console.log('query', util.inspect(query, {depth: null}))
-  //console.log('post_options', util.inspect(post_options))
+  debug('query', util.inspect(query, {depth: null}))
+  debug('post_options', util.inspect(post_options))
   
-  var post_req = http.request(post_options, function(res) {
+  var postReq = http.request(post_options, function(res) {
 
     var chunks = []
     
@@ -81,11 +94,9 @@ function doQuery(){
       var body = chunks.join('')
       var result = JSON.parse(body)
 
-      //console.log(util.inspect(result, {depth:null}))
+      debug('result', util.inspect(result, {depth:null}))
 
       var hits = result.hits.hits
-
-      //console.log('hits.length',hits.length)
 
       processResultHits(hits, fields)
       
@@ -93,9 +104,9 @@ function doQuery(){
     })
   })
 
-  post_req.end(queryData)
+  postReq.end(queryData)
 
-  post_req.on('error', function(){
+  postReq.on('error', function(){
     console.error('request error', arguments)
     querying = false
     process.nextTick(scheduleQuery)
