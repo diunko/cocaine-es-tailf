@@ -39,7 +39,7 @@ $ es-tailf --es-host elastic01d.tst.ape.yandex.net \
     --es-port 9200 \
     --source-path '*user-name*' \
     --source-host '*' \
-    -f @timestamp -f @source_host -f source_path -f @message
+    -f @timestamp -f @source_host -f @source_path -f @message
 ```
 
 #### BUGS
