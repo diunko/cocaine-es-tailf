@@ -23,16 +23,17 @@ which is an equivalent of querying kibana with query `*` and filter
 
 `es-port` (by default 9200)
 
-`source-path` (required) -- equivalent of `@source_path` field in kibana
+`source-path` (required) -- equivalent of `@source_path` filter field in kibana
 
-`source-host` (by default *) -- equivalent of `@source_host` field in kibana
+`source-host` (by default *) -- equivalent of `@source_host` filter field in kibana
 
 `-f` (specify many times for multiple fields) -- fields to display in
 search result, `['@timestamp', '@source_host', '@source_path', '@message']`
 by-default.
 
 
-The above example is an equivalent of command:
+Thus, the example in `Usage` section is an equivalent of the following
+command:
 
 ```
 $ es-tailf --es-host elastic01d.tst.ape.yandex.net \
